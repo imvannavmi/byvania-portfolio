@@ -135,7 +135,7 @@ export default function Portfolio({ locale, entries = [] }: { locale: Locale; en
           <h1>Vania Bunga<br /><span>Febrina</span><i className="underscore">_</i></h1>
           <div className="role-line"><span className="role-prefix">$ current_role</span><span className="role-value" key={roleIndex}>{t.roles[roleIndex]}</span></div>
           <p className="hero-intro">{t.intro}</p>
-          <div className="hero-actions"><a className="button primary" href="#contact"><span>↗</span>{t.contact}</a><a className="button secondary" href="#projects">{t.work}<span>↓</span></a></div>
+          <div className="hero-actions"><a className="button primary" href="#contact">{t.contact}</a><a className="button secondary" href="#projects">{t.work}</a></div>
           <div className="availability"><span />{t.location}</div>
         </div>
         <div className="hero-aside" aria-label="Terminal profile preview">
@@ -159,19 +159,19 @@ export default function Portfolio({ locale, entries = [] }: { locale: Locale; en
       </section>
 
       <section className="content-section section-wrap" id="experience">
-        <div className="section-heading reveal"><div><span className="command">$ ls ./experience</span><h2>{t.experience}<span>.</span></h2><p>{t.experienceIntro}</p></div><span className="section-id">02 / HISTORY</span></div>
+        <div className="section-heading reveal"><div><span className="command">$ ls ./experience</span><h2>{t.experience}<span>.</span></h2></div><span className="section-id">02 / HISTORY</span></div>
         <div className="timeline">{displayExperience.map((item, i) => <article className="experience-card reveal" key={item.company}><div className="timeline-marker"><span>0{i + 1}</span><i /></div><div className="experience-main"><div className="experience-head"><div><span className="company-type">{locale === "id" ? "PENGALAMAN" : "EXPERIENCE"}</span><h3>{item.company}</h3></div><span className="period">{item.period}</span></div><div className="experience-meta"><span><small>{t.role}</small>{item.role}</span><span><small>{t.project}</small>{item.project}</span></div><ul>{item.bullets.map(b => <li key={b}>{b}</li>)}</ul><div className="tag-row">{item.stack.split(" · ").filter(Boolean).map(tag => <span key={tag}>{tag}</span>)}</div></div></article>)}</div>
       </section>
 
       <section className="content-section skills-section section-wrap" id="skills">
-        <div className="section-heading reveal"><div><span className="command">$ cat ./skills.json</span><h2>{t.skills}<span>.</span></h2><p>{t.skillsIntro}</p></div><span className="section-id">03 / TOOLKIT</span></div>
+        <div className="section-heading reveal"><div><span className="command">$ cat ./skills.json</span><h2>{t.skills}<span>.</span></h2></div><span className="section-id">03 / TOOLKIT</span></div>
         <div className="skill-legend reveal"><span><i className="legend-dot practiced" />{t.practiced}</span><span><i className="legend-dot learning" />{t.learning}</span></div>
         <div className="skills-grid">{displaySkills.map((group, i) => <article className={`skill-card reveal ${group.level}`} key={group.id}><div className="skill-card-head"><span className="skill-index">0{i + 1}</span><span className="skill-level">{group.level === "learning" ? t.learning : t.practiced}</span></div><h3>{group.name}</h3><div className="skill-tags">{group.items.map(item => <button type="button" className={`skill-filter-tag ${selectedSkill === item ? "active" : ""}`} key={item} aria-pressed={selectedSkill === item} onClick={() => filterBySkill(item)} title={locale === "id" ? `Lihat proyek dengan skill ${item}` : `Show projects using ${item}`}>{item}</button>)}</div><div className="skill-card-foot"><span>SKILLSET / {group.name.toUpperCase()}</span><span>↗</span></div></article>)}</div>
       </section>
 
       <section className="content-section projects-section section-wrap" id="projects">
-        <div className="section-heading reveal"><div><span className="command">$ ./projects --list</span><h2>{t.projects}<span>.</span></h2><p>{t.projectsIntro}</p></div><span className="section-id">04 / BUILDS</span></div>
-        <div className="project-notice reveal"><span>i</span><p>{selectedSkill ? (locale === "id" ? `Menampilkan proyek yang menggunakan “${selectedSkill}”.` : `Showing projects using “${selectedSkill}”.`) : t.projectCaveat}</p>{selectedSkill && <button type="button" className="clear-skill-filter" onClick={() => setSelectedSkill("")}>{locale === "id" ? "Hapus filter" : "Clear filter"} ×</button>}</div>
+        <div className="section-heading reveal"><div><span className="command">$ ./projects --list</span><h2>{t.projects}<span>.</span></h2></div><span className="section-id">04 / BUILDS</span></div>
+        {selectedSkill && <div className="project-notice reveal"><span>i</span><p>{locale === "id" ? `Menampilkan proyek yang menggunakan “${selectedSkill}”.` : `Showing projects using “${selectedSkill}”.`}</p><button type="button" className="clear-skill-filter" onClick={() => setSelectedSkill("")}>{locale === "id" ? "Hapus filter" : "Clear filter"} ×</button></div>}
         {filteredProjects.length ? <div className="projects-grid">{filteredProjects.map((item, i) => <Link className="project-card reveal" href={`/${locale}/projects/${item.slug}`} key={item.id}><div className="project-visual visual-cms"><div className="visual-top"><span>PROJECT / 0{i + 1}</span><span>↗</span></div><div className="visual-art" aria-hidden="true">{item.thumbnail ? <img className="project-thumbnail" src={item.thumbnail} alt="" loading="lazy" decoding="async" /> : <div className="project-art-placeholder"><span>&lt;/&gt;</span><i/><i/><b>PROJECT FILE</b></div>}</div><span className="visual-class">{item.category}</span></div><div className="project-body"><div className="project-status"><i />{item.status}</div><h3>{item.title}</h3>{item.subtitle && <p className="project-subtitle">{item.subtitle}</p>}<p>{item.description}</p><div className="tag-row">{item.tags.map(tag => <span key={tag}>{tag}</span>)}</div><div className="project-detail"><span>{t.details}</span><span>CASE FILE · {item.slug.toUpperCase()}</span></div></div></Link>)}</div> : selectedSkill ? <p className="skill-empty-state">{locale === "id" ? `Belum ada proyek dengan tag “${selectedSkill}”.` : `No projects tagged “${selectedSkill}” yet.`}</p> : null}
       </section>
 
@@ -181,7 +181,17 @@ export default function Portfolio({ locale, entries = [] }: { locale: Locale; en
       </section>
 
       <section className="contact-section section-wrap" id="contact">
-        <div className="contact-panel reveal"><div className="contact-top"><span className="command">$ ./contact --connect</span><span className="section-id">06 / CONNECTION</span></div><div className="contact-content"><div className="contact-copy"><h2>{t.contactTitle}<span>.</span></h2><p>{t.contactIntro}</p><div className="contact-console"><span className="status-dot" />{locale === "id" ? "KANAL TERSEDIA" : "CHANNEL AVAILABLE"}<strong>→ EMAIL</strong></div></div><div className="contact-links"><div className="contact-link disabled"><span className="contact-link-icon">@</span><span><small>{t.email}</small><strong>{t.emailPlaceholder}</strong></span><span className="contact-link-arrow">↗</span></div><div className="contact-link disabled"><span className="contact-link-icon">⌘</span><span><small>{t.github}</small><strong>github.com/ <em>· {locale === "id" ? "profil belum tersedia" : "profile pending"}</em></strong></span><span className="contact-link-arrow">↗</span></div><div className="contact-link disabled"><span className="contact-link-icon">in</span><span><small>{t.linkedin}</small><strong>linkedin.com/ <em>· {locale === "id" ? "profil belum tersedia" : "profile pending"}</em></strong></span><span className="contact-link-arrow">↗</span></div><p className="form-note">{t.formNote}</p></div></div><div className="contact-bottom"><span>{locale === "id" ? "STATUS KONEKSI" : "CONNECTION STATUS"} <b>● {locale === "id" ? "MENUNGGU KONFIGURASI" : "PENDING CONFIGURATION"}</b></span><span>BY.VANIA // {new Date().getFullYear()}</span></div></div>
+        <div className="contact-panel reveal">
+          <div className="contact-top"><span className="command">$ ./contact --connect</span><span className="section-id">06 / CONNECTION</span></div>
+          <div className="contact-content">
+            <div className="contact-copy"><h2>{t.contactTitle}<span>.</span></h2><p>{t.contactIntro}</p><div className="contact-console"><span className="status-dot" />{locale === "id" ? "TERBUKA UNTUK PELUANG" : "OPEN TO OPPORTUNITIES"}</div></div>
+            <div className="contact-links">
+              <a className="contact-link" href="https://mail.google.com/mail/?view=cm&fs=1&to=imvannavmi%40gmail.com" target="_blank" rel="noreferrer"><span className="contact-link-icon">@</span><span><small>{t.email}</small><strong>imvannavmi@gmail.com</strong></span></a>
+              <a className="contact-link" href="https://github.com/imvannavmi/" target="_blank" rel="noreferrer"><span className="contact-link-icon">⌘</span><span><small>{t.github}</small><strong>github.com/imvannavmi</strong></span></a>
+            </div>
+          </div>
+          <div className="contact-bottom"><span>{locale === "id" ? "STATUS KONEKSI" : "CONNECTION STATUS"} <b>● {locale === "id" ? "TERBUKA UNTUK KERJA, MAGANG & KOLABORASI" : "OPEN TO WORK, INTERNSHIPS & COLLABORATIONS"}</b></span><span>BY.VANIA // {new Date().getFullYear()}</span></div>
+        </div>
       </section>
     </main>
     <footer className="footer section-wrap"><a className="brand" href="#home"><span className="brand-mark">&lt;/&gt;</span> by.vania<span className="brand-dot">_</span></a><a href="#home">{locale === "id" ? "Kembali ke atas ↑" : "Back to top ↑"}</a><span>DESIGNED & BUILT WITH CURIOSITY</span></footer>
