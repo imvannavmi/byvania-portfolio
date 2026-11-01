@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { projects, type Locale } from "@/content";
+import type { Locale } from "@/content";
 import { getPublishedContent } from "@/lib/supabase/content";
 
 export const dynamic = "force-dynamic";
@@ -13,14 +13,6 @@ const safeUrl = (value: unknown) => {
   if (typeof value !== "string") return "";
   try { const url = new URL(value); return url.protocol === "https:" || url.protocol === "http:" ? url.toString() : ""; } catch { return ""; }
 };
-const staticDescriptions: Record<string, Record<Locale, string>> = {
-  "home-lab": { id: "Lingkungan belajar Blue Team pemula untuk memahami pemantauan Windows, Event Viewer, dan investigasi log secara aman dan terdokumentasi.", en: "A beginner Blue Team learning environment for understanding Windows monitoring, Event Viewer, and safe, documented log investigation." },
-  mentorconnect: { id: "Platform mentoring berbasis web yang dikerjakan selama program magang Full Stack Developer.", en: "A web-based mentoring platform developed during a Full Stack Developer internship." },
-  bms: { id: "Dukungan desain mekanik dan hardware untuk sistem manajemen gedung dan pemantauan energi.", en: "Mechanical design and hardware support for a building management and energy monitoring system." },
-  unboxbrief: { id: "Generator brief tantangan proyek IT dan pemrograman dalam pengalaman mystery box.", en: "A project brief generator for IT and programming challenges, presented through a mystery-box experience." },
-  journal: { id: "Aplikasi jurnal personal dan scrapbook cetak berbasis Flutter.", en: "A Flutter-based personal journaling and printable scrapbook application." },
-};
-
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }): Promise<Metadata> {
   const { locale, slug } = await params;
   return { title: `${slug.replace(/-/g, " ")} · by.vania`, description: locale === "id" ? "Studi kasus proyek oleh Vania Bunga Febrina." : "Project case study by Vania Bunga Febrina." };
@@ -32,15 +24,14 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
   const locale: Locale = rawLocale;
   const entries = await getPublishedContent(locale);
   const cms = entries.find(row => row.kind === "project" && (stringValue(row.payload.slug) || slugify(row.title)) === slug);
-  const fallback = projects.find(item => item.id === slug);
-  if (!cms && !fallback) notFound();
+  if (!cms) notFound();
 
-  const title = cms?.title || fallback!.title;
-  const payload = cms?.payload || {};
+  const title = cms.title;
+  const payload = cms.payload || {};
   const subtitle = stringValue(payload.subtitle);
-  const description = stringValue(payload.description) || (fallback ? staticDescriptions[fallback.id]?.[locale] || "" : "");
-  const category = stringValue(payload.category) || fallback?.category || (locale === "id" ? "Proyek" : "Project");
-  const tags = (listValue(payload.technologies).length ? listValue(payload.technologies) : listValue(payload.tools).length ? listValue(payload.tools) : fallback?.tags || []).map(tag => tag.trim()).filter(Boolean);
+  const description = stringValue(payload.description);
+  const category = stringValue(payload.category) || (locale === "id" ? "Proyek" : "Project");
+  const tags = (listValue(payload.technologies).length ? listValue(payload.technologies) : listValue(payload.tools)).map(tag => tag.trim()).filter(Boolean);
   const gallery = Array.isArray(payload.images) ? payload.images.flatMap((image): { url: string; caption: string }[] => {
     if (typeof image === "string") {
       const url = safeUrl(image);

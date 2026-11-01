@@ -37,12 +37,7 @@ export const content = {
     period: "Periode",
     project: "Proyek",
     educationStatus: "Detail menunggu konfirmasi",
-    homeLabDescription: "Lingkungan belajar Blue Team pemula untuk memahami pemantauan Windows, Event Viewer, dan investigasi log secara aman dan terdokumentasi.",
-    mentorDescription: "Platform mentoring berbasis web yang dikerjakan selama program magang Full Stack Developer.",
-    bmsDescription: "Dukungan desain mekanik dan hardware untuk sistem manajemen gedung dan pemantauan energi.",
-    unboxDescription: "Generator brief tantangan proyek IT dan pemrograman dalam pengalaman mystery box.",
-    journalDescription: "Aplikasi jurnal personal dan scrapbook cetak berbasis Flutter.",
-    projectCaveat: "Ringkasan ini hanya memuat informasi yang tersedia. Tautan repository, demo, tangkapan layar, dan hasil terukur dapat ditambahkan saat tersedia.",
+    projectCaveat: "Proyek yang diterbitkan melalui dashboard admin akan ditampilkan di sini.",
     footer: "</> by.vania",
   },
   en: {
@@ -81,12 +76,7 @@ export const content = {
     period: "Period",
     project: "Project",
     educationStatus: "Details pending confirmation",
-    homeLabDescription: "A beginner Blue Team learning environment for understanding Windows monitoring, Event Viewer, and safe, documented log investigation.",
-    mentorDescription: "A web-based mentoring platform developed during a Full Stack Developer internship.",
-    bmsDescription: "Mechanical design and hardware support for a building management and energy monitoring system.",
-    unboxDescription: "A project brief generator for IT and programming challenges, presented through a mystery-box experience.",
-    journalDescription: "A Flutter-based personal journaling and printable scrapbook application.",
-    projectCaveat: "These summaries include only information currently available. Repository links, demos, screenshots, and measured outcomes can be added when available.",
+    projectCaveat: "Projects published through the admin dashboard will appear here.",
     footer: "</> by.vania",
   },
 } as const;
@@ -99,11 +89,3 @@ export const skillGroups = [
 ] as const;
 
 export const experience = [] as const;
-
-export const projects = [
-  { id: "home-lab", title: "Cybersecurity Home Lab", category: "Blue Team · Learning lab", descriptionKey: "homeLabDescription", tags: ["Windows 11", "Event Viewer", "Security logs"], status: { id: "Eksplorasi terarah", en: "Guided exploration" } },
-  { id: "mentorconnect", title: "MentorConnect", category: "Web application · Internship", descriptionKey: "mentorDescription", tags: ["React", "Node.js", "Express", "SQLite", "Bcrypt"], status: { id: "Dikembangkan saat magang", en: "Developed during internship" } },
-  { id: "bms", title: "BMS / Energy Monitoring", category: "Hardware · Mechanical design", descriptionKey: "bmsDescription", tags: ["3D enclosure", "Sensors", "PCB routing"], status: { id: "Dukungan desain", en: "Design support" } },
-  { id: "unboxbrief", title: "unboxBrief", category: "Web · Project challenge", descriptionKey: "unboxDescription", tags: ["IT", "Programming", "Random briefs"], status: { id: "Konsep proyek", en: "Project concept" } },
-  { id: "journal", title: "Personal Journal / Scrapbook", category: "Flutter · Personal productivity", descriptionKey: "journalDescription", tags: ["Flutter", "Journaling", "Printable"], status: { id: "Konsep proyek", en: "Project concept" } },
-] as const;

@@ -166,6 +166,12 @@ body{font-size:17px;line-height:1.75}
 .project-gallery-section .detail-gallery-grid figcaption{display:grid;grid-template-columns:max-content minmax(0,1fr);align-items:start;gap:13px;min-height:42px;padding:12px 14px;line-height:1.5}
 .project-gallery-section .detail-gallery-grid figcaption span{white-space:nowrap}
 @media(min-width:761px) and (max-width:1000px){.project-gallery-section .detail-gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.project-art-placeholder{width:min(68%,250px);height:105px;position:relative;display:grid;place-items:center;border:1px solid rgba(121,225,160,.28);background:linear-gradient(145deg,rgba(18,34,24,.88),rgba(8,14,10,.86));box-shadow:0 16px 34px rgba(0,0,0,.28)}
+.project-art-placeholder>span{color:#8cdda3;font:22px var(--mono)}
+.project-art-placeholder>b{position:absolute;left:10px;bottom:8px;color:#74867a;font:7px var(--mono);letter-spacing:.12em}
+.project-art-placeholder>i{position:absolute;right:11px;width:30px;height:1px;background:rgba(121,225,160,.25)}
+.project-art-placeholder>i:nth-of-type(1){top:14px}
+.project-art-placeholder>i:nth-of-type(2){top:20px;width:18px}
 .project-detail-page .detail-footer{max-width:940px;margin:35px auto 0}
 @media(max-width:760px){.project-detail-wrap{max-width:100%}.project-detail-hero{grid-template-columns:1fr;gap:27px;padding:42px 0 27px;min-height:0}.project-detail-copy h1{font-size:clamp(46px,12vw,66px)}.project-detail-cover,.project-detail-art{grid-row:1;transform:none}.project-detail-cover img{aspect-ratio:1.55}.project-detail-nav{margin:0 -3px;border-radius:12px}.project-detail-content{padding-top:20px}.project-section{padding:30px 0 34px;scroll-margin-top:75px}.project-overview-body{grid-template-columns:1fr;gap:20px;padding:19px}.project-overview-meta{grid-template-columns:1fr 1fr;border-left:0;border-top:1px solid var(--line);padding:15px 0 0}.project-feature-grid{grid-template-columns:1fr}.project-feature-grid li{min-height:0}.project-narrative-panel{grid-template-columns:38px minmax(0,1fr);gap:12px;padding:18px}.project-narrative-mark{width:34px;height:34px}.project-narrative-panel>p,.project-narrative-panel .docs-feature-list{font-size:15px}.project-gallery-section .detail-gallery-grid{grid-template-columns:1fr}.project-detail-page .detail-footer{margin-top:27px}}
 @media(prefers-reduced-motion:reduce){.project-feature-grid li,.project-detail-links a{transition:none}.project-feature-grid li:hover{transform:none}}
