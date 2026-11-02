@@ -78,13 +78,26 @@ export default function Portfolio({ locale, entries = [] }: { locale: Locale; en
   const [roleIndex, setRoleIndex] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const [selectedSkill, setSelectedSkill] = useState("");
+  const matchesSkill = (value: string, skill: string) => {
+    const normalize = (text: string) => text.toLowerCase().replace(/\brestful\b/g, "rest").replace(/[^a-z0-9]+/g, " ").trim();
+    const normalizedValue = normalize(value);
+    const normalizedSkill = normalize(skill);
+    return normalizedValue.includes(normalizedSkill) || normalizedSkill.includes(normalizedValue);
+  };
   const filteredProjects = selectedSkill
-    ? displayProjects.filter(project => project.tags.some(tag => tag.toLowerCase().includes(selectedSkill.toLowerCase()) || selectedSkill.toLowerCase().includes(tag.toLowerCase())))
+    ? displayProjects.filter(project => project.tags.some(tag => matchesSkill(tag, selectedSkill)))
     : displayProjects;
+  const filteredExperience = selectedSkill
+    ? displayExperience.filter(item => item.stack.split(" · ").some(tag => matchesSkill(tag, selectedSkill)))
+    : displayExperience;
   const filterBySkill = (skill: string) => {
-    setSelectedSkill(current => current === skill ? "" : skill);
-    if (matchMedia("(prefers-reduced-motion: reduce)").matches) document.getElementById("projects")?.scrollIntoView();
-    else document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
+    const clearingFilter = selectedSkill === skill;
+    const skillProjects = displayProjects.filter(project => project.tags.some(tag => matchesSkill(tag, skill)));
+    const skillExperience = displayExperience.filter(item => item.stack.split(" · ").some(tag => matchesSkill(tag, skill)));
+    const destination = !clearingFilter && skillExperience.length > 0 && skillProjects.length === 0 ? "experience" : "projects";
+    setSelectedSkill(clearingFilter ? "" : skill);
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) document.getElementById(destination)?.scrollIntoView();
+    else document.getElementById(destination)?.scrollIntoView({ behavior: "smooth" });
   };
   useEffect(() => {
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -96,7 +109,7 @@ export default function Portfolio({ locale, entries = [] }: { locale: Locale; en
     const observer = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visible"); observer.unobserve(e.target); } }), { threshold: .12 });
     document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
     return () => observer.disconnect();
-  }, [locale]);
+  }, [locale, selectedSkill]);
   useEffect(() => {
     const finePointer = matchMedia("(pointer: fine)").matches;
     if (!finePointer || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -162,7 +175,8 @@ export default function Portfolio({ locale, entries = [] }: { locale: Locale; en
 
       <section className="content-section section-wrap" id="experience">
         <div className="section-heading reveal"><div><span className="command">$ ls ./experience</span><h2>{t.experience}<span>.</span></h2></div><span className="section-id">02 / HISTORY</span></div>
-        <div className="timeline">{displayExperience.map((item, i) => <article className="experience-card reveal" key={item.company}><div className="timeline-marker"><span>0{i + 1}</span><i /></div><div className="experience-main"><div className="experience-head"><div><span className="company-type">{locale === "id" ? "PENGALAMAN" : "EXPERIENCE"}</span><h3>{item.company}</h3></div><span className="period">{item.period}</span></div><div className="experience-meta"><span><small>{t.role}</small>{item.role}</span><span><small>{t.project}</small>{item.project}</span></div><ul>{item.bullets.map(b => <li key={b}>{b}</li>)}</ul><div className="tag-row">{item.stack.split(" · ").filter(Boolean).map(tag => <span key={tag}>{tag}</span>)}</div></div></article>)}</div>
+        {selectedSkill && filteredExperience.length > 0 && <div className="project-notice reveal"><span>i</span><p>{locale === "id" ? `Teknologi “${selectedSkill}” tercantum pada pengalaman berikut.` : `“${selectedSkill}” is listed in the following experience.`}</p><button type="button" className="clear-skill-filter" onClick={() => setSelectedSkill("")}>{locale === "id" ? "Hapus filter" : "Clear filter"} ×</button></div>}
+        <div className="timeline">{(selectedSkill ? filteredExperience : displayExperience).map((item, i) => <article className="experience-card reveal" key={item.company}><div className="timeline-marker"><span>0{i + 1}</span><i /></div><div className="experience-main"><div className="experience-head"><div><span className="company-type">{locale === "id" ? "PENGALAMAN" : "EXPERIENCE"}</span><h3>{item.company}</h3></div><span className="period">{item.period}</span></div><div className="experience-meta"><span><small>{t.role}</small>{item.role}</span><span><small>{t.project}</small>{item.project}</span></div><ul>{item.bullets.map(b => <li key={b}>{b}</li>)}</ul><div className="tag-row">{item.stack.split(" · ").filter(Boolean).map(tag => <span key={tag}>{tag}</span>)}</div></div></article>)}</div>
       </section>
 
       <section className="content-section skills-section section-wrap" id="skills">
@@ -174,8 +188,8 @@ export default function Portfolio({ locale, entries = [] }: { locale: Locale; en
       <section className="content-section projects-section section-wrap" id="projects">
         <div className="section-heading reveal"><div><span className="command">$ ./projects --list</span><h2>{t.projects}<span>.</span></h2></div><span className="section-id">04 / BUILDS</span></div>
         <div className="project-notice project-stage-note"><span>i</span><p>{t.projectStageNote}</p></div>
-        {selectedSkill && <div className="project-notice reveal"><span>i</span><p>{locale === "id" ? `Menampilkan proyek yang menggunakan “${selectedSkill}”.` : `Showing projects using “${selectedSkill}”.`}</p><button type="button" className="clear-skill-filter" onClick={() => setSelectedSkill("")}>{locale === "id" ? "Hapus filter" : "Clear filter"} ×</button></div>}
-        {filteredProjects.length ? <div className="projects-grid">{filteredProjects.map((item, i) => <Link className="project-card reveal" href={`/${locale}/projects/${item.slug}`} key={item.id}><div className="project-visual visual-cms"><div className="visual-top"><span>PROJECT / 0{i + 1}</span><span>↗</span></div><div className="visual-art" aria-hidden="true">{item.thumbnail ? <img className="project-thumbnail" src={item.thumbnail} alt="" loading="lazy" decoding="async" /> : <div className="project-art-placeholder"><span>&lt;/&gt;</span><i/><i/><b>PROJECT FILE</b></div>}</div><span className="visual-class">{item.category}</span></div><div className="project-body"><div className="project-status"><i />{item.status}</div><h3>{item.title}</h3>{item.subtitle && <p className="project-subtitle">{item.subtitle}</p>}<p>{item.description}</p><div className="tag-row">{item.tags.map(tag => <span key={tag}>{tag}</span>)}</div><div className="project-detail"><span>{t.details}</span><span>CASE FILE · {item.slug.toUpperCase()}</span></div></div></Link>)}</div> : selectedSkill ? <p className="skill-empty-state">{locale === "id" ? `Belum ada proyek dengan tag “${selectedSkill}”.` : `No projects tagged “${selectedSkill}” yet.`}</p> : null}
+        {selectedSkill && <div className="project-notice reveal"><span>i</span><p>{filteredProjects.length ? (locale === "id" ? `Menampilkan proyek yang menggunakan “${selectedSkill}”.` : `Showing projects using “${selectedSkill}”.`) : (locale === "id" ? `Tidak ada proyek yang mencantumkan “${selectedSkill}”${filteredExperience.length ? "; teknologi ini ditemukan pada pengalaman di atas." : "."}` : `No projects list “${selectedSkill}”${filteredExperience.length ? "; this technology appears in the experience section above." : "."}`)}</p><button type="button" className="clear-skill-filter" onClick={() => setSelectedSkill("")}>{locale === "id" ? "Hapus filter" : "Clear filter"} ×</button></div>}
+        {filteredProjects.length ? <div className="projects-grid">{filteredProjects.map((item, i) => <Link className="project-card reveal" href={`/${locale}/projects/${item.slug}`} key={item.id}><div className="project-visual visual-cms"><div className="visual-top"><span>PROJECT / 0{i + 1}</span><span>↗</span></div><div className="visual-art" aria-hidden="true">{item.thumbnail ? <img className="project-thumbnail" src={item.thumbnail} alt="" loading="lazy" decoding="async" /> : <div className="project-art-placeholder"><span>&lt;/&gt;</span><i/><i/><b>PROJECT FILE</b></div>}</div><span className="visual-class">{item.category}</span></div><div className="project-body"><div className="project-status"><i />{item.status}</div><h3>{item.title}</h3>{item.subtitle && <p className="project-subtitle">{item.subtitle}</p>}<p>{item.description}</p><div className="tag-row">{item.tags.map(tag => <span key={tag}>{tag}</span>)}</div><div className="project-detail"><span>{t.details}</span><span>CASE FILE · {item.slug.toUpperCase()}</span></div></div></Link>)}</div> : selectedSkill && !filteredExperience.length ? <p className="skill-empty-state">{locale === "id" ? `Belum ada proyek atau pengalaman yang mencantumkan “${selectedSkill}”.` : `No projects or experience list “${selectedSkill}” yet.`}</p> : null}
       </section>
 
       <section hidden className="content-section education-section section-wrap" id="education">
