@@ -43,13 +43,15 @@ const makeSlug = (value: string) => value.toLowerCase().normalize("NFD").replace
 function skillCategory(skill: string, locale: Locale) {
   const value = skill.toLowerCase();
   if (/cctv|nvr|ivms|surveillance|ip camera|kamera/.test(value)) return locale === "id" ? "CCTV & Monitoring" : "CCTV & Monitoring";
-  if (/jaringan|network|\blan\b|dhcp|\bdns\b|tcp\/?ip|router|switch|subnet|vlan|mikrotik|wi-?fi|ethernet|firewall|routing|wireless/.test(value)) return locale === "id" ? "Jaringan" : "Networking";
-  if (/mysql|postgres|\bsql\b|database|basis data|mongodb|supabase/.test(value)) return locale === "id" ? "Database" : "Databases";
+  if (/git|github|vercel|railway|deployment|deploy|hosting|version control|versioning/.test(value)) return locale === "id" ? "Tools & Platform" : "Tools & Platforms";
+  if (/google maps|maps api|twilio|whatsapp|api integration|integrasi api/.test(value)) return locale === "id" ? "API & Integrasi" : "APIs & Integrations";
+  if (/jaringan|network|\blan\b|dhcp|\bdns\b|tcp\/?ip|router|switch|subnet|vlan|mikrotik|wi-?fi|ethernet|firewall|routing|wireless|bluetooth/.test(value)) return locale === "id" ? "Jaringan" : "Networking";
+  if (/mysql|postgres|sqlite|\bsql\b|database|basis data|mongodb|supabase/.test(value)) return locale === "id" ? "Database" : "Databases";
   if (/figma|ui\/?ux|user interface|wireframe|prototyp|graphic design|desain visual/.test(value)) return locale === "id" ? "Desain & Prototyping" : "Design & Prototyping";
-  if (/tegangan|voltage|hardware|sensor|embedded|\biot\b|bms|\bplc\b|pcb|enclosure|casing|\b3d\b|komponen|microcontroller|arduino|esp32/.test(value)) return locale === "id" ? "Hardware, Elektronika & Embedded" : "Hardware, Electronics & Embedded";
+  if (/tegangan|voltage|hardware|sensor|embedded|\biot\b|bms|\bplc\b|pcb|enclosure|casing|\b3d\b|komponen|microcontroller|arduino|esp32|gps|neo[- ]?m8n|max30102|peltier|tec1[- ]?12706/.test(value)) return locale === "id" ? "Hardware, Elektronika & Embedded" : "Hardware, Electronics & Embedded";
   if (/bcrypt|authenticat|autentikasi|cyber|security|wireshark|siem|blue team|event viewer|nmap/.test(value)) return locale === "id" ? "Keamanan & Autentikasi" : "Security & Authentication";
   if (/linux|zorin|ubuntu|windows|macos|operating system|sistem operasi|docker|server|vmware|proxmox/.test(value)) return locale === "id" ? "Sistem Operasi & Infrastruktur" : "Operating Systems & Infrastructure";
-  if (/php|react|tailwind|node\.?js|express|javascript|typescript|python|java\b|\bc\+\+?\b|program|software|web|rest(?:ful)?\s*api|\bapi\b|flutter|next\.?js/.test(value)) return locale === "id" ? "Pemrograman & Web" : "Programming & Web";
+  if (/php|react|tailwind|node\.?js|express|javascript|typescript|python|java\b|\bc\+\+?\b|program|software|web|rest(?:ful)?\s*api|\bapi\b|flutter|next\.?js|\bdart\b/.test(value)) return locale === "id" ? "Pemrograman & Web" : "Programming & Web";
   return locale === "id" ? "Teknologi Lainnya" : "Other Technologies";
 }
 
