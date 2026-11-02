@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 async function requireAdmin() {
@@ -28,6 +29,34 @@ export async function loginAction(formData: FormData) {
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) redirect("/admin?error=credentials");
   redirect("/admin");
+}
+
+export async function requestPasswordResetAction(formData: FormData) {
+  const email = String(formData.get("email") || "").trim();
+  if (!email || email.length > 254) redirect("/admin/forgot-password?error=invalid");
+
+  const origin = (await headers()).get("origin");
+  if (!origin) redirect("/admin/forgot-password?error=reset");
+  const redirectTo = new URL("/auth/callback?next=/admin/update-password", origin).toString();
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
+  if (error) redirect("/admin/forgot-password?error=reset");
+  redirect("/admin/forgot-password?sent=1");
+}
+
+export async function updatePasswordAction(formData: FormData) {
+  const password = String(formData.get("password") || "");
+  const confirmPassword = String(formData.get("confirmPassword") || "");
+  if (password.length < 8 || password.length > 128 || password !== confirmPassword) {
+    redirect("/admin/update-password?error=invalid");
+  }
+
+  const supabase = await createSupabaseServerClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/admin/forgot-password?error=expired");
+  const { error } = await supabase.auth.updateUser({ password });
+  if (error) redirect("/admin/update-password?error=invalid");
+  redirect("/admin?reset=1");
 }
 
 export async function logoutAction() {

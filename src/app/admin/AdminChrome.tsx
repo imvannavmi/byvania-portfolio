@@ -15,8 +15,9 @@ export function Notice({ code }: { code?: string }) {
     delete: "Konten tidak dapat dihapus.",
     image: "File harus berupa JPEG, PNG, atau WebP dan berukuran maksimal 5 MB.",
     storage: "Upload gagal. Pastikan bucket project-images dan kebijakan Storage sudah dibuat.",
+    "password-updated": "Kata sandi berhasil diubah. Kamu sudah masuk sebagai administrator.",
   };
-  return <p className={`admin-notice ${code === "saved" || code === "deleted" ? "success" : "error"}`} role="status">{messages[code] || (code === "saved" ? "Perubahan berhasil disimpan." : code === "deleted" ? "Konten berhasil dihapus." : "Terjadi kesalahan.")}</p>;
+  return <p className={`admin-notice ${code === "saved" || code === "deleted" || code === "password-updated" ? "success" : "error"}`} role="status">{messages[code] || (code === "saved" ? "Perubahan berhasil disimpan." : code === "deleted" ? "Konten berhasil dihapus." : "Terjadi kesalahan.")}</p>;
 }
 
 export function AdminFooter() {
